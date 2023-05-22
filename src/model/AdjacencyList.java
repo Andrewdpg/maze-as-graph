@@ -1,6 +1,14 @@
 package model;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.PriorityQueue;
+import java.util.Queue;
+import java.util.Stack;
 
 public class AdjacencyList<T> implements Graph<T> {
     private Map<T, Node<T>> map = new HashMap<>();
@@ -28,7 +36,7 @@ public class AdjacencyList<T> implements Graph<T> {
             map.put(destination, destinationNode);
         }
 
-        sourceNode.addNeighbor(destinationNode, weight);
+        sourceNode.addNeighbor(new Edge<>(destinationNode, weight));
 
     }
 
@@ -39,8 +47,8 @@ public class AdjacencyList<T> implements Graph<T> {
             return Collections.emptyList();
         } else {
             List<T> neighbors = new ArrayList<>();
-            for (Node<T> neighbor : node.getNeighbors()) {
-                neighbors.add(neighbor.getValue());
+            for (Edge<T> neighbor : node.getEdges()) {
+                neighbors.add(neighbor.getNode().getValue());
             }
             return neighbors;
         }
@@ -60,11 +68,11 @@ public class AdjacencyList<T> implements Graph<T> {
             Node<T> currentNode = queue.poll();
             System.out.print(currentNode.getValue() + " ");
 
-            for (Node<T> neighbor : currentNode.getNeighbors()) {
-                T neighborValue = neighbor.getValue();
+            for (Edge<T> neighbor : currentNode.getEdges()) {
+                T neighborValue = neighbor.getNode().getValue();
                 if (!visited.containsKey(neighborValue)) {
                     visited.put(neighborValue, true);
-                    queue.add(neighbor);
+                    queue.add(neighbor.getNode());
                 }
             }
         }
@@ -86,9 +94,9 @@ public class AdjacencyList<T> implements Graph<T> {
             visited.put(currentNode.getValue(), true);
             System.out.print(currentNode.getValue() + " ");
 
-            for (Node<T> neighbor : currentNode.getNeighbors()) {
-                if (!visited.containsKey(neighbor.getValue())) {
-                    stack.push(neighbor);
+            for (Edge<T> neighbor : currentNode.getEdges()) {
+                if (!visited.containsKey(neighbor.getNode().getValue())) {
+                    stack.push(neighbor.getNode());
                 }
             }
         }
@@ -102,8 +110,8 @@ public class AdjacencyList<T> implements Graph<T> {
     public void removeVertex(T value) {
         Node<T> node = map.get(value);
         if (node != null) {
-            for (Node<T> neighbor : node.getNeighbors()) {
-                neighbor.removeNeighbor(node);
+            for (Edge<T> neighbor : node.getEdges()) {
+                neighbor.getNode().removeNeighbor(node);
             }
             map.remove(value);
         }
@@ -149,12 +157,12 @@ public class AdjacencyList<T> implements Graph<T> {
     
             visited.put(currentVertex, true);
     
-            for (Node<T> neighbor : currentNode.getNeighbors()) {
-                T neighborVertex = neighbor.getValue();
-                int distanceToNeighbor = distances.get(currentVertex) + 1;
+            for (Edge<T> edge : currentNode.getEdges()) {
+                T neighborVertex = edge.getNode().getValue();
+                int distanceToNeighbor = distances.get(currentVertex) + edge.getWeight();
                 if (distanceToNeighbor < distances.get(neighborVertex)) {
                     distances.put(neighborVertex, distanceToNeighbor);
-                    queue.add(neighbor);
+                    queue.add(edge.getNode());
                 }
             }
         }
