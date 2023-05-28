@@ -7,17 +7,21 @@ import java.util.Map;
 import java.util.Scanner;
 
 import model.AdjacencyList;
-import model.Graph;
+import model.IGraph;
 import model.Pair;
 
 public class Menu {
-    private Graph<Integer> graph;
+    private IGraph<Integer> graph;
     private int[][] matrix;
     private int numRows;
     private int numCols;
+    private int endCol;
+    private int endRow;
+    private Integer[][] entrances;
 
     public Menu() {
         graph = new AdjacencyList<>();
+        //graph = new AdjacencyMatrix<>();
     }
 
     public void displayMenu() {
@@ -37,16 +41,22 @@ public class Menu {
 
         int numEntrances = scan.nextInt();
 
-        Integer[][] entrances = new Integer[numEntrances][2];
+        entrances = new Integer[numEntrances][2];
         for (int i = 0; i < numEntrances; i++) {
             int row = scan.nextInt();
             int col = scan.nextInt();
             entrances[i] = new Integer[] { row, col };
         }
 
-        int endRow = scan.nextInt();
-        int endCol = scan.nextInt();
+        endRow = scan.nextInt();
+        endCol = scan.nextInt();
+        for (String res : solve()){
+            System.out.println(res);
+        }
+        scan.close();
+    }
 
+    List<String> solve() {
         buildGraph();
 
         int numSolutions = 0;
@@ -66,16 +76,16 @@ public class Menu {
                 }
             }
         }
-
+        List<String> result = new ArrayList<>();
         // Print result
-        System.out.println(numSolutions);
         if (numSolutions > 0) {
-            printPath(minPath);
-            System.out.println(minCost);
+            result.add(String.valueOf(numSolutions));
+            result.add(printPath(minPath));
+            result.add(String.valueOf(minCost));
         } else {
-            System.out.println("-1");
+            result.add("-1");
         }
-        scan.close();
+        return result;
     }
 
     private void buildGraph() {
@@ -123,8 +133,8 @@ public class Menu {
 
         int startVertex = startRow * numCols + startCol;
         int endVertex = endRow * numCols + endCol;
-        
-        Map<Integer, Pair<Integer,Integer>> distances = graph.dijkstra(startVertex);
+
+        Map<Integer, Pair<Integer, Integer>> distances = graph.dijkstra(startVertex);
 
         if (!distances.containsKey(endVertex)) {
             return null;
@@ -158,17 +168,42 @@ public class Menu {
         return cost;
     }
 
-    private void printPath(List<Integer> path) {
+    private String printPath(List<Integer> path) {
+        String pathString = "";
         for (int i = 0; i < path.size(); i++) {
             int vertex = path.get(i);
             int row = vertex / numCols;
             int col = vertex % numCols;
-            System.out.print("(" + row + "," + col + ")");
+            pathString += "(" + row + "," + col + ")";
             if (i < path.size() - 1) {
-                System.out.print(" -> ");
+                pathString += " -> ";
             }
         }
-        System.out.println();
+        return pathString;
+    }
+
+    public void setMatrix(int[][] matrix) {
+        this.matrix = matrix;
+    }
+
+    public void setNumRows(int numRows) {
+        this.numRows = numRows;
+    }
+
+    public void setNumCols(int numCols) {
+        this.numCols = numCols;
+    }
+
+    public void setEndCol(int endCol) {
+        this.endCol = endCol;
+    }
+
+    public void setEndRow(int endRow) {
+        this.endRow = endRow;
+    }
+
+    public void setEntrances(Integer[][] entrances) {
+        this.entrances = entrances;
     }
 
 }

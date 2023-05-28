@@ -10,7 +10,7 @@ import java.util.PriorityQueue;
 import java.util.Queue;
 import java.util.Stack;
 
-public class AdjacencyList<T extends Comparable<T>> implements Graph<T> {
+public class AdjacencyList<T extends Comparable<T>> implements IGraph<T> {
     private Map<T, Node<T>> map = new HashMap<>();
 
     @Override
@@ -55,6 +55,8 @@ public class AdjacencyList<T extends Comparable<T>> implements Graph<T> {
 
     @Override
     public void bfs(T start) {
+        if (!map.containsKey(start))
+            return;
         Map<T, Boolean> visited = new HashMap<>();
         Queue<Node<T>> queue = new LinkedList<>();
 
@@ -78,6 +80,8 @@ public class AdjacencyList<T extends Comparable<T>> implements Graph<T> {
 
     @Override
     public void dfs(T start) {
+        if (!map.containsKey(start))
+            return;
         Map<T, Boolean> visited = new HashMap<>();
         Stack<Node<T>> stack = new Stack<>();
 
@@ -100,6 +104,7 @@ public class AdjacencyList<T extends Comparable<T>> implements Graph<T> {
         }
     }
 
+    @Override
     public List<T> getVertices() {
         return new ArrayList<>(map.keySet());
     }
@@ -108,8 +113,8 @@ public class AdjacencyList<T extends Comparable<T>> implements Graph<T> {
     public void removeVertex(T value) {
         Node<T> node = map.get(value);
         if (node != null) {
-            for (Edge<T> neighbor : node.getEdges()) {
-                neighbor.getNode().removeNeighbor(node);
+            for (Node<T> vertex : map.values()) {
+                vertex.removeNeighbor(node);
             }
             map.remove(value);
         }
@@ -132,6 +137,8 @@ public class AdjacencyList<T extends Comparable<T>> implements Graph<T> {
 
     @Override
     public Map<T, Pair<Integer, T>> dijkstra(T start) {
+        if (!map.containsKey(start))
+            return new HashMap<>();
         Map<T, Pair<Integer, T>> distances = new HashMap<>();
         Map<T, Boolean> visited = new HashMap<>();
         PriorityQueue<Node<T>> queue = new PriorityQueue<>(

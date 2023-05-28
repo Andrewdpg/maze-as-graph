@@ -11,7 +11,7 @@ import java.util.Queue;
 import java.util.Set;
 import java.util.Stack;
 
-public class AdjacencyMatrix<T> implements Graph<T> {
+public class AdjacencyMatrix<T> implements IGraph<T> {
 
     private HashMap<T, HashMap<T, Integer>> map = new HashMap<>();
 
@@ -43,6 +43,8 @@ public class AdjacencyMatrix<T> implements Graph<T> {
 
     @Override
     public void bfs(T start) {
+        if (!map.containsKey(start))
+            return;
         Map<T, Boolean> visited = new HashMap<>();
         Queue<T> queue = new LinkedList<>();
         visited.put(start, true);
@@ -63,6 +65,8 @@ public class AdjacencyMatrix<T> implements Graph<T> {
 
     @Override
     public void dfs(T start) {
+        if (!map.containsKey(start))
+            return;
         Map<T, Boolean> visited = new HashMap<>();
         Stack<T> stack = new Stack<>();
         stack.push(start);
@@ -83,6 +87,7 @@ public class AdjacencyMatrix<T> implements Graph<T> {
         }
     }
 
+    @Override
     public List<T> getVertices() {
         return new ArrayList<>(map.keySet());
     }
@@ -112,6 +117,8 @@ public class AdjacencyMatrix<T> implements Graph<T> {
 
     @Override
     public Map<T, Pair<Integer, T>> dijkstra(T start) {
+        if (!map.containsKey(start))
+            return new HashMap<>();
         Map<T, Pair<Integer, T>> distances = new HashMap<>();
         Map<T, Boolean> visited = new HashMap<>();
         PriorityQueue<T> queue = new PriorityQueue<>(
