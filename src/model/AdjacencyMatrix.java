@@ -1,0 +1,149 @@
+package model;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.PriorityQueue;
+import java.util.Queue;
+import java.util.Set;
+import java.util.Stack;
+
+public class AdjacencyMatrix<T> implements Graph<T> {
+
+    private HashMap<T, HashMap<T, Integer>> map = new HashMap<>();
+
+    @Override
+    public void addVertex(T value) {
+        map.putIfAbsent(value, new HashMap<>());
+    }
+
+    @Override
+    public void addEdge(T source, T destination, int weight) {
+        addVertex(source);
+        addVertex(destination);
+        map.get(source).putIfAbsent(destination, weight);
+    }
+
+    @Override
+    public List<T> getNeighbors(T value) {
+        HashMap<T, Integer> nodes = map.get(value);
+        if (nodes == null) {
+            return Collections.emptyList();
+        } else {
+            List<T> neighbors = new ArrayList<>();
+            for (T neighbor : nodes.keySet()) {
+                neighbors.add(neighbor);
+            }
+            return neighbors;
+        }
+    }
+
+    @Override
+    public void bfs(T start) {
+        Map<T, Boolean> visited = new HashMap<>();
+        Queue<T> queue = new LinkedList<>();
+        visited.put(start, true);
+        queue.add(start);
+
+        while (!queue.isEmpty()) {
+            T currentNode = queue.poll();
+            System.out.print(currentNode + " ");
+            Set<T> edges = map.get(currentNode).keySet();
+            for (T neighbor : edges) {
+                if (!visited.containsKey(neighbor)) {
+                    visited.put(neighbor, true);
+                    queue.add(neighbor);
+                }
+            }
+        }
+    }
+
+    @Override
+    public void dfs(T start) {
+        Map<T, Boolean> visited = new HashMap<>();
+        Stack<T> stack = new Stack<>();
+        stack.push(start);
+
+        while (!stack.isEmpty()) {
+            T currentNode = stack.pop();
+            if (visited.containsKey(currentNode))
+                continue;
+
+            visited.put(currentNode, true);
+            System.out.print(currentNode + " ");
+            Set<T> edges = map.get(currentNode).keySet();
+            for (T neighbor : edges) {
+                if (!visited.containsKey(neighbor)) {
+                    stack.push(neighbor);
+                }
+            }
+        }
+    }
+
+    public List<T> getVertices() {
+        return new ArrayList<>(map.keySet());
+    }
+
+    @Override
+    public void removeVertex(T value) {
+        if (map.containsKey(value)) {
+            Set<T> edges = map.keySet();
+            for (T node : edges) {
+                map.get(node).remove(value);
+            }
+            map.remove(value);
+        }
+    }
+
+    @Override
+    public void removeEdge(T source, T destination) {
+        if (map.containsKey(source) && map.containsKey(destination)) {
+            map.get(source).remove(destination);
+        }
+    }
+
+    @Override
+    public void clear() {
+        map.clear();
+    }
+
+    @Override
+    public Map<T, Pair<Integer, T>> dijkstra(T start) {
+        Map<T, Pair<Integer, T>> distances = new HashMap<>();
+        Map<T, Boolean> visited = new HashMap<>();
+        PriorityQueue<T> queue = new PriorityQueue<>(
+                (n1, n2) -> Integer.compare(distances.get(n1).getFirst(), distances.get(n2).getFirst()));
+
+        for (T vertex : map.keySet()) {
+            distances.put(vertex, new Pair<>(Integer.MAX_VALUE, null));
+        }
+
+        distances.put(start, new Pair<>(0, null));
+
+        queue.add(start);
+
+        while (!queue.isEmpty()) {
+            T currentNode = queue.poll();
+
+            if (visited.containsKey(currentNode)) {
+                continue;
+            }
+
+            visited.put(currentNode, true);
+
+            Set<T> edges = map.get(currentNode).keySet();
+            for (T neighbor : edges) {
+                Integer distanceToNeighbor = distances.get(currentNode).getFirst() + map.get(currentNode).get(neighbor);
+                if (distanceToNeighbor < distances.get(neighbor).getFirst()) {
+                    distances.put(neighbor, new Pair<>(distanceToNeighbor, currentNode));
+                    queue.add(neighbor);
+                }
+            }
+        }
+
+        return distances;
+    }
+}
