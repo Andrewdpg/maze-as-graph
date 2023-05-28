@@ -10,7 +10,7 @@ import java.util.PriorityQueue;
 import java.util.Queue;
 import java.util.Stack;
 
-public class AdjacencyList<T> implements Graph<T> {
+public class AdjacencyList<T extends Comparable<T>> implements Graph<T> {
     private Map<T, Node<T>> map = new HashMap<>();
 
     @Override
@@ -136,7 +136,7 @@ public class AdjacencyList<T> implements Graph<T> {
     public Map<T, Integer> dijkstra(T start) {
         Map<T, Integer> distances = new HashMap<>();
         Map<T, Boolean> visited = new HashMap<>();
-        PriorityQueue<Node<T>> queue = new PriorityQueue<>();
+        PriorityQueue<Node<T>> queue = new PriorityQueue<>((n1, n2) -> Integer.compare(distances.get(n1.getValue()), distances.get(n2.getValue())));
     
         for (T vertex : map.keySet()) {
             distances.put(vertex, Integer.MAX_VALUE);
@@ -168,7 +168,5 @@ public class AdjacencyList<T> implements Graph<T> {
         }
     
         return distances;
-    }
-    
-
+    }    
 }
