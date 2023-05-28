@@ -1,13 +1,14 @@
 package ui;
 
-import model.AdjacencyList;
-import model.Graph;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
+
+import model.AdjacencyList;
+import model.Graph;
+import model.Pair;
 
 public class Menu {
     private Graph<Integer> graph;
@@ -74,6 +75,7 @@ public class Menu {
         } else {
             System.out.println("-1");
         }
+        scan.close();
     }
 
     private void buildGraph() {
@@ -86,8 +88,6 @@ public class Menu {
                 vertex++;
             }
         }
-
-        int numVertices = numRows * numCols;
 
         for (int i = 0; i < numRows; i++) {
             for (int j = 0; j < numCols; j++) {
@@ -120,9 +120,11 @@ public class Menu {
     }
 
     private List<Integer> findShortestPath(int startRow, int startCol, int endRow, int endCol) {
+
         int startVertex = startRow * numCols + startCol;
         int endVertex = endRow * numCols + endCol;
-        Map<Integer, Integer> distances = graph.dijkstra(startVertex);
+        
+        Map<Integer, Pair<Integer,Integer>> distances = graph.dijkstra(startVertex);
 
         if (!distances.containsKey(endVertex)) {
             return null;
@@ -133,7 +135,7 @@ public class Menu {
 
         while (currentVertex != startVertex) {
             path.add(currentVertex);
-            Integer previousVertex = distances.get(currentVertex);
+            Integer previousVertex = distances.get(currentVertex).getSecond();
             if (previousVertex == null) {
                 return null;
             }
@@ -147,7 +149,7 @@ public class Menu {
 
     private int calculateCost(List<Integer> path) {
         int cost = 0;
-        for (int i = 0; i < path.size() - 1; i++) {
+        for (int i = 1; i < path.size(); i++) {
             int vertex = path.get(i);
             int row = vertex / numCols;
             int col = vertex % numCols;

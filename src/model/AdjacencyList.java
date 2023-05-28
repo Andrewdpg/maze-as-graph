@@ -37,7 +37,6 @@ public class AdjacencyList<T extends Comparable<T>> implements Graph<T> {
         }
 
         sourceNode.addNeighbor(new Edge<>(destinationNode, weight));
-
     }
 
     @Override
@@ -53,7 +52,6 @@ public class AdjacencyList<T extends Comparable<T>> implements Graph<T> {
             return neighbors;
         }
     }
-
 
     @Override
     public void bfs(T start) {
@@ -133,40 +131,42 @@ public class AdjacencyList<T extends Comparable<T>> implements Graph<T> {
     }
 
     @Override
-    public Map<T, Integer> dijkstra(T start) {
-        Map<T, Integer> distances = new HashMap<>();
+    public Map<T, Pair<Integer, T>> dijkstra(T start) {
+        Map<T, Pair<Integer, T>> distances = new HashMap<>();
         Map<T, Boolean> visited = new HashMap<>();
-        PriorityQueue<Node<T>> queue = new PriorityQueue<>((n1, n2) -> Integer.compare(distances.get(n1.getValue()), distances.get(n2.getValue())));
-    
+        PriorityQueue<Node<T>> queue = new PriorityQueue<>(
+                (n1, n2) -> Integer.compare(distances.get(n1.getValue()).getFirst(), distances.get(n2.getValue())
+                        .getFirst()));
+
         for (T vertex : map.keySet()) {
-            distances.put(vertex, Integer.MAX_VALUE);
+            distances.put(vertex, new Pair<>(Integer.MAX_VALUE, null));
         }
-    
-        distances.put(start, 0);
-    
+
+        distances.put(start, new Pair<>(0, null));
+
         Node<T> startNode = map.get(start);
         queue.add(startNode);
-    
+
         while (!queue.isEmpty()) {
             Node<T> currentNode = queue.poll();
             T currentVertex = currentNode.getValue();
-    
+
             if (visited.containsKey(currentVertex)) {
                 continue;
             }
-    
+
             visited.put(currentVertex, true);
-    
+
             for (Edge<T> edge : currentNode.getEdges()) {
                 T neighborVertex = edge.getNode().getValue();
-                int distanceToNeighbor = distances.get(currentVertex) + edge.getWeight();
-                if (distanceToNeighbor < distances.get(neighborVertex)) {
-                    distances.put(neighborVertex, distanceToNeighbor);
+                Integer distanceToNeighbor = distances.get(currentVertex).getFirst() + edge.getWeight();
+                if (distanceToNeighbor < distances.get(neighborVertex).getFirst()) {
+                    distances.put(neighborVertex, new Pair<>(distanceToNeighbor, currentNode.getValue()));
                     queue.add(edge.getNode());
                 }
             }
         }
-    
+
         return distances;
-    }    
+    }
 }

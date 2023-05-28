@@ -12,5 +12,5 @@ public interface Graph<T> {
     void removeVertex(T value);
     void removeEdge(T source, T destination);
     void clear();
-    Map<T, Integer> dijkstra(T start);
+    Map<T, Pair<Integer, T>> dijkstra(T start);
 }
