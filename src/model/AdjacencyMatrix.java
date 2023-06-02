@@ -174,4 +174,52 @@ public class AdjacencyMatrix<T> implements IGraph<T> {
 
         return distances;
     }
+
+    public Map<T, T> primMST() {
+        if (map.isEmpty()) {
+            return new HashMap<>();
+        }
+
+        Map<T, Integer> key = new HashMap<>();
+        Map<T, T> parent = new HashMap<>();
+        Map<T, Boolean> mstSet = new HashMap<>();
+
+        for (T vertex : map.keySet()) {
+            key.put(vertex, Integer.MAX_VALUE);
+            parent.put(vertex, null);
+            mstSet.put(vertex, false);
+        }
+
+        key.put(getVertices().get(0), 0);
+
+        for (int count = 0; count < map.size() - 1; count++) {
+            T u = getMinKey(key, mstSet);
+            mstSet.put(u, true);
+
+            for (T v : getNeighbors(u)) {
+                int weight = map.get(u).get(v);
+
+                if (!mstSet.get(v) && weight < key.get(v)) {
+                    parent.put(v, u);
+                    key.put(v, weight);
+                }
+            }
+        }
+
+        return parent;
+    }
+
+    private T getMinKey(Map<T, Integer> key, Map<T, Boolean> mstSet) {
+        int min = Integer.MAX_VALUE;
+        T minKey = null;
+
+        for (T vertex : map.keySet()) {
+            if (!mstSet.get(vertex) && key.get(vertex) < min) {
+                min = key.get(vertex);
+                minKey = vertex;
+            }
+        }
+
+        return minKey;
+    }
 }

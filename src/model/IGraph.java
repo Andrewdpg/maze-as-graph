@@ -15,4 +15,5 @@ public interface IGraph<T> {
     void clear();
     Map<T, Pair<Integer, T>> dijkstra(T start);
     Map<T, Map<T, Integer>> floydWarshall();
+    Map<T, T> primMST();
 }
