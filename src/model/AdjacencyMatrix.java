@@ -153,4 +153,25 @@ public class AdjacencyMatrix<T> implements IGraph<T> {
 
         return distances;
     }
+
+    public Map<T, Map<T, Integer>> floydWarshall() {
+        Map<T, Map<T, Integer>> distances = new HashMap<>(map);
+        List<T> vertices = new ArrayList<>(map.keySet());
+
+        for (T k : vertices) {
+            for (T i : vertices) {
+                for (T j : vertices) {
+                    int ik = distances.get(i).get(k);
+                    int kj = distances.get(k).get(j);
+                    int ij = distances.get(i).get(j);
+
+                    if (ik != Integer.MAX_VALUE && kj != Integer.MAX_VALUE && ik + kj < ij) {
+                        distances.get(i).put(j, ik + kj);
+                    }
+                }
+            }
+        }
+
+        return distances;
+    }
 }

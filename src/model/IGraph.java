@@ -14,4 +14,5 @@ public interface IGraph<T> {
     void removeEdge(T source, T destination);
     void clear();
     Map<T, Pair<Integer, T>> dijkstra(T start);
+    Map<T, Map<T, Integer>> floydWarshall();
 }

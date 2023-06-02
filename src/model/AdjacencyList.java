@@ -176,4 +176,42 @@ public class AdjacencyList<T extends Comparable<T>> implements IGraph<T> {
 
         return distances;
     }
+
+    public Map<T, Map<T, Integer>> floydWarshall() {
+        Map<T, Map<T, Integer>> distances = new HashMap<>();
+
+        for (T vertex : map.keySet()) {
+            distances.put(vertex, new HashMap<>());
+            for (T otherVertex : map.keySet()) {
+                if (vertex.equals(otherVertex)) {
+                    distances.get(vertex).put(otherVertex, 0);
+                } else {
+                    distances.get(vertex).put(otherVertex, Integer.MAX_VALUE);
+                }
+            }
+        }
+
+        for (Node<T> node : map.values()) {
+            for (Edge<T> edge : node.getEdges()) {
+                distances.get(node.getValue()).put(edge.getNode().getValue(), edge.getWeight());
+            }
+        }
+
+        for (T k : map.keySet()) {
+            for (T i : map.keySet()) {
+                for (T j : map.keySet()) {
+                    int distanceIK = distances.get(i).get(k);
+                    int distanceKJ = distances.get(k).get(j);
+                    int distanceIJ = distances.get(i).get(j);
+
+                    if (distanceIK != Integer.MAX_VALUE && distanceKJ != Integer.MAX_VALUE
+                            && distanceIK + distanceKJ < distanceIJ) {
+                        distances.get(i).put(j, distanceIK + distanceKJ);
+                    }
+                }
+            }
+        }
+
+        return distances;
+    }
 }
