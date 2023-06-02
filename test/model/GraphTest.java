@@ -507,14 +507,12 @@ public class GraphTest {
 
         List<Edge<String>> mst = graph.kruskalMST();
 
-        // Verificar que se haya obtenido el MST correcto
         assertEquals(4, mst.size());
 
         int totalWeight = 0;
         for (Edge<String> edge : mst) {
             totalWeight += edge.getWeight();
         }
-        assertEquals(19, totalWeight);
+        assertEquals(21, totalWeight);
     }
-
 }

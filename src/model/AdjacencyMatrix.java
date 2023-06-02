@@ -162,9 +162,9 @@ public class AdjacencyMatrix<T> implements IGraph<T> {
         for (T k : vertices) {
             for (T i : vertices) {
                 for (T j : vertices) {
-                    int ik = distances.get(i).get(k);
-                    int kj = distances.get(k).get(j);
-                    int ij = distances.get(i).get(j);
+                    int ik = getDistance(distances, i, k);
+                    int kj = getDistance(distances, k, j);
+                    int ij = getDistance(distances, i, j);
 
                     if (ik != Integer.MAX_VALUE && kj != Integer.MAX_VALUE && ik + kj < ij) {
                         distances.get(i).put(j, ik + kj);
@@ -174,6 +174,12 @@ public class AdjacencyMatrix<T> implements IGraph<T> {
         }
 
         return distances;
+    }
+
+    public int getDistance(Map<T, Map<T, Integer>> distances, T i, T k) {
+        distances.putIfAbsent(i,new HashMap<>());
+        distances.get(i).putIfAbsent(k, i == k? 0:Integer.MAX_VALUE);
+        return distances.get(i).get(k);
     }
 
     public Map<T, T> primMST() {
@@ -231,8 +237,7 @@ public class AdjacencyMatrix<T> implements IGraph<T> {
         for (T vertex : map.keySet()) {
             for (T neighbor : getNeighbors(vertex)) {
                 int weight = map.get(vertex).get(neighbor);
-                Edge<T> temp = new Edge<>(new Node<T>(vertex), new Node<T>(neighbor), weight);
-                edges.add(temp);
+                edges.add(new Edge<>(new Node<T>(vertex), new Node<T>(neighbor), weight));
             }
         }
 
