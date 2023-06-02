@@ -432,4 +432,32 @@ public class GraphTest {
         }
     }
 
+    @Test
+    public void testFloydWarshall() {
+        initSetup();
+        // Add vertex to the graph
+        graph.addVertex("A");
+        graph.addVertex("B");
+        graph.addVertex("C");
+
+        // Add edges with their respective weight
+        graph.addEdge("A", "B", 1);
+        graph.addEdge("A", "C", 4);
+        graph.addEdge("B", "C", 2);
+
+        //Execute Floyd-Warshall algorithm 
+        Map<String, Map<String, Integer>> distances = graph.floydWarshall();
+
+        //Verify the minimum path expected
+        assertEquals(0, distances.get("A").get("A").intValue());
+        assertEquals(1, distances.get("A").get("B").intValue());
+        assertEquals(3, distances.get("A").get("C").intValue());
+        assertEquals(Integer.MAX_VALUE, distances.get("B").get("A").intValue());
+        assertEquals(0, distances.get("B").get("B").intValue());
+        assertEquals(2, distances.get("B").get("C").intValue());
+        assertEquals(Integer.MAX_VALUE, distances.get("C").get("A").intValue());
+        assertEquals(Integer.MAX_VALUE, distances.get("C").get("B").intValue());
+        assertEquals(0, distances.get("C").get("C").intValue());
+    }
+
 }
