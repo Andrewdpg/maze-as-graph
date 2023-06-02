@@ -9,7 +9,7 @@ public interface IGraph<T> {
     void addEdge(T source, T destination, int weight);
     List<T> getVertices();
     List<T> getNeighbors(T vertex);
-    void bfs(T start);
+    List<T> bfs(T start);
     void dfs(T start);
     void removeVertex(T value);
     void removeEdge(T source, T destination);

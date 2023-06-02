@@ -55,9 +55,10 @@ public class AdjacencyList<T extends Comparable<T>> implements IGraph<T> {
     }
 
     @Override
-    public void bfs(T start) {
+    public List<T> bfs(T start) {
         if (!map.containsKey(start))
-            return;
+            return null;
+        List<T> bfs = new ArrayList<>();
         Map<T, Boolean> visited = new HashMap<>();
         Queue<Node<T>> queue = new LinkedList<>();
 
@@ -67,7 +68,7 @@ public class AdjacencyList<T extends Comparable<T>> implements IGraph<T> {
 
         while (!queue.isEmpty()) {
             Node<T> currentNode = queue.poll();
-            System.out.print(currentNode.getValue() + " ");
+            bfs.add(currentNode.getValue());
 
             for (Edge<T> neighbor : currentNode.getEdges()) {
                 T neighborValue = neighbor.getNode().getValue();
@@ -77,6 +78,7 @@ public class AdjacencyList<T extends Comparable<T>> implements IGraph<T> {
                 }
             }
         }
+        return bfs;
     }
 
     @Override

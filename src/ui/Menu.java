@@ -21,7 +21,7 @@ public class Menu {
 
     public Menu() {
         graph = new AdjacencyList<>();
-        //graph = new AdjacencyMatrix<>();
+        // graph = new AdjacencyMatrix<>();
     }
 
     public void displayMenu() {
@@ -50,7 +50,7 @@ public class Menu {
 
         endRow = scan.nextInt();
         endCol = scan.nextInt();
-        for (String res : solve()){
+        for (String res : solve()) {
             System.out.println(res);
         }
         scan.close();
@@ -66,8 +66,8 @@ public class Menu {
         for (Integer[] entrance : entrances) {
             int startRow = entrance[0];
             int startCol = entrance[1];
-            List<Integer> path = findShortestPath(startRow, startCol, endRow, endCol);
-            if (path != null) {
+            if (existsAPath(startRow, startCol, numSolutions, minCost)) {
+                List<Integer> path = findShortestPath(startRow, startCol, endRow, endCol);
                 numSolutions++;
                 int cost = calculateCost(path);
                 if (cost < minCost) {
@@ -86,6 +86,13 @@ public class Menu {
             result.add("-1");
         }
         return result;
+    }
+
+    private boolean existsAPath(int startRow, int startCol, int endRow, int endCol) {
+        int startVertex = startRow * numCols + startCol;
+        int endVertex = endRow * numCols + endCol;
+
+        return graph.bfs(startVertex).contains(endVertex);
     }
 
     private void buildGraph() {

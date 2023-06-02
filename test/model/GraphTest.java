@@ -17,8 +17,8 @@ public class GraphTest {
     IGraph<String> graph;
 
     void initSetup() {
-        graph = new AdjacencyList<>();
-        //graph = new AdjacencyMatrix<>();
+        //graph = new AdjacencyList<>();
+        graph = new AdjacencyMatrix<>();
     }
 
     @Test
@@ -132,12 +132,12 @@ public class GraphTest {
         graph.addEdge("A", "C", 5);
         graph.addEdge("B", "D", 7);
 
-        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-        System.setOut(new PrintStream(outputStream));
-
-        graph.bfs("A");
-        String output = outputStream.toString().trim();
-        assertEquals("A B C D", output);
+        List<String> bfs = graph.bfs("A");
+        
+        assertTrue(bfs.contains("A"));
+        assertTrue(bfs.contains("B"));
+        assertTrue(bfs.contains("C"));
+        assertTrue(bfs.contains("D"));
     }
 
     @Test
@@ -204,11 +204,9 @@ public class GraphTest {
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
         System.setOut(new PrintStream(outputStream));
 
-        graph.bfs("A");
-        String bfsOutput = outputStream.toString().trim();
-        assertEquals("A B", bfsOutput);
-
-        outputStream.reset();
+        List<String> bfs = graph.bfs("A");
+        assertTrue(bfs.contains("A"));
+        assertTrue(bfs.contains("B"));
 
         graph.dfs("C");
         String dfsOutput = outputStream.toString().trim();

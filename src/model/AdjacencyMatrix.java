@@ -43,9 +43,10 @@ public class AdjacencyMatrix<T> implements IGraph<T> {
     }
 
     @Override
-    public void bfs(T start) {
+    public List<T> bfs(T start) {
         if (!map.containsKey(start))
-            return;
+            return null;
+        List<T> bfs = new ArrayList<>();
         Map<T, Boolean> visited = new HashMap<>();
         Queue<T> queue = new LinkedList<>();
         visited.put(start, true);
@@ -53,7 +54,7 @@ public class AdjacencyMatrix<T> implements IGraph<T> {
 
         while (!queue.isEmpty()) {
             T currentNode = queue.poll();
-            System.out.print(currentNode + " ");
+            bfs.add(currentNode);
             Set<T> edges = map.get(currentNode).keySet();
             for (T neighbor : edges) {
                 if (!visited.containsKey(neighbor)) {
@@ -62,6 +63,7 @@ public class AdjacencyMatrix<T> implements IGraph<T> {
                 }
             }
         }
+        return bfs;
     }
 
     @Override
