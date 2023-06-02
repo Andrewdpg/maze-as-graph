@@ -487,4 +487,34 @@ public class GraphTest {
         assertEquals("1", mst.get("3"));
     }
 
+    @Test
+    public void testKruskalMST() {
+        initSetup();
+
+        graph.addVertex("A");
+        graph.addVertex("B");
+        graph.addVertex("C");
+        graph.addVertex("D");
+        graph.addVertex("E");
+
+        graph.addEdge("A", "B", 10);
+        graph.addEdge("A", "C", 6);
+        graph.addEdge("A", "D", 5);
+        graph.addEdge("B", "D", 15);
+        graph.addEdge("C", "D", 4);
+        graph.addEdge("C", "E", 2);
+        graph.addEdge("D", "E", 8);
+
+        List<Edge<String>> mst = graph.kruskalMST();
+
+        // Verificar que se haya obtenido el MST correcto
+        assertEquals(4, mst.size());
+
+        int totalWeight = 0;
+        for (Edge<String> edge : mst) {
+            totalWeight += edge.getWeight();
+        }
+        assertEquals(19, totalWeight);
+    }
+
 }

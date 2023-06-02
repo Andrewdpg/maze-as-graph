@@ -280,13 +280,15 @@ public class AdjacencyList<T extends Comparable<T>> implements IGraph<T> {
         }
 
         for (Edge<T> edge : edges) {
-            T source = edge.getNode().getValue();
+            T source = edge.getSource().getValue();
             T destination = edge.getNode().getValue();
 
-            if (!disjointSet.findSet(source).equals(disjointSet.findSet(destination))) {
-                mst.add(edge);
-
-                disjointSet.union(source, destination);
+            if(source!= null&& destination!= null){
+                if (!disjointSet.findSet(source).equals(disjointSet.findSet(destination))) {
+                    mst.add(edge);
+    
+                    disjointSet.union(source, destination);
+                }
             }
         }
 

@@ -7,6 +7,7 @@ public class Edge<T> {
     private int weight;
 
     public Edge(Node<T> source, Node<T> neighbor, int weight) {
+        this.source= source;
         this.node = neighbor;
         this.weight = weight;
     }
