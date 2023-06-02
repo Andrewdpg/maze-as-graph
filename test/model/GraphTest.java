@@ -1,5 +1,6 @@
 package model;
 
+import static org.junit.Assert.assertNull;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -458,6 +459,32 @@ public class GraphTest {
         assertEquals(Integer.MAX_VALUE, distances.get("C").get("A").intValue());
         assertEquals(Integer.MAX_VALUE, distances.get("C").get("B").intValue());
         assertEquals(0, distances.get("C").get("C").intValue());
+    }
+
+    @Test
+    public void testPrimMST() {
+        initSetup();
+
+        graph.addVertex("1");
+        graph.addVertex("2");
+        graph.addVertex("3");
+        graph.addVertex("4");
+
+        graph.addEdge("1", "2", 10);
+        graph.addEdge("2", "3", 15);
+        graph.addEdge("1", "3", 5);
+        graph.addEdge("2", "4", 2);
+        graph.addEdge("3", "4", 6);
+
+        Map<String, String> mst = graph.primMST();
+
+        assertEquals(4, mst.size());
+        assertTrue(mst.containsKey("1"));
+        assertTrue(mst.containsKey("2"));
+        assertTrue(mst.containsKey("3"));
+        assertNull(mst.get("1"));
+        assertEquals("1", mst.get("2"));
+        assertEquals("1", mst.get("3"));
     }
 
 }
