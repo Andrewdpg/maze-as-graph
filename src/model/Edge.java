@@ -2,10 +2,11 @@ package model;
 
 public class Edge<T> {
 
+    private Node<T> source;
     private Node<T> node;
     private int weight;
 
-    public Edge(Node<T> neighbor, int weight) {
+    public Edge(Node<T> source, Node<T> neighbor, int weight) {
         this.node = neighbor;
         this.weight = weight;
     }
@@ -26,4 +27,11 @@ public class Edge<T> {
         this.weight = weight;
     }
 
+    public Node<T> getSource() {
+        return source;
+    }
+
+    public void setSource(Node<T> source) {
+        this.source = source;
+    }
 }

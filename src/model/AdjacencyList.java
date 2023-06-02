@@ -2,6 +2,7 @@ package model;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -36,7 +37,7 @@ public class AdjacencyList<T extends Comparable<T>> implements IGraph<T> {
             map.put(destination, destinationNode);
         }
 
-        sourceNode.addNeighbor(new Edge<>(destinationNode, weight));
+        sourceNode.addNeighbor(new Edge<>(sourceNode, destinationNode, weight));
     }
 
     @Override
@@ -261,5 +262,34 @@ public class AdjacencyList<T extends Comparable<T>> implements IGraph<T> {
         }
 
         return minKey;
+    }
+
+    public List<Edge<T>> kruskalMST() {
+        List<Edge<T>> mst = new ArrayList<>();
+
+        List<Edge<T>> edges = new ArrayList<>();
+        for (Node<T> node : map.values()) {
+            edges.addAll(node.getEdges());
+        }
+
+        Collections.sort(edges, Comparator.comparingInt(Edge::getWeight));
+
+        DisjointSet<T> disjointSet = new DisjointSet<>();
+        for (T vertex : map.keySet()) {
+            disjointSet.makeSet(vertex);
+        }
+
+        for (Edge<T> edge : edges) {
+            T source = edge.getNode().getValue();
+            T destination = edge.getNode().getValue();
+
+            if (!disjointSet.findSet(source).equals(disjointSet.findSet(destination))) {
+                mst.add(edge);
+
+                disjointSet.union(source, destination);
+            }
+        }
+
+        return mst;
     }
 }

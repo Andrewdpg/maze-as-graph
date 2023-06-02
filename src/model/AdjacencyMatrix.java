@@ -2,6 +2,7 @@ package model;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -221,5 +222,38 @@ public class AdjacencyMatrix<T> implements IGraph<T> {
         }
 
         return minKey;
+    }
+
+    public List<Edge<T>> kruskalMST() {
+        List<Edge<T>> mst = new ArrayList<>();
+
+        List<Edge<T>> edges = new ArrayList<>();
+        for (T vertex : map.keySet()) {
+            for (T neighbor : getNeighbors(vertex)) {
+                int weight = map.get(vertex).get(neighbor);
+                Edge<T> temp = new Edge<>(new Node<T>(vertex), new Node<T>(neighbor), weight);
+                edges.add(temp);
+            }
+        }
+
+        edges.sort(Comparator.comparingInt(Edge::getWeight));
+
+        DisjointSet<T> disjointSet = new DisjointSet<>();
+        for (T vertex : map.keySet()) {
+            disjointSet.makeSet(vertex);
+        }
+
+        for (Edge<T> edge : edges) {
+            T source = edge.getSource().getValue();
+            T destination = edge.getNode().getValue();
+
+            if (!disjointSet.findSet(source).equals(disjointSet.findSet(destination))) {
+                mst.add(edge);
+
+                disjointSet.union(source, destination);
+            }
+        }
+
+        return mst;
     }
 }
