@@ -66,7 +66,7 @@ public class Menu {
         for (Integer[] entrance : entrances) {
             int startRow = entrance[0];
             int startCol = entrance[1];
-            if (existsAPath(startRow, startCol, numSolutions, minCost)) {
+            if (existsAPath(startRow, startCol, endRow, endCol)) {
                 List<Integer> path = findShortestPath(startRow, startCol, endRow, endCol);
                 numSolutions++;
                 int cost = calculateCost(path);
@@ -92,7 +92,8 @@ public class Menu {
         int startVertex = startRow * numCols + startCol;
         int endVertex = endRow * numCols + endCol;
 
-        return graph.bfs(startVertex).contains(endVertex);
+        List<Integer> res = graph.bfs(startVertex);
+        return res != null? res.contains(endVertex):false;
     }
 
     private void buildGraph() {
